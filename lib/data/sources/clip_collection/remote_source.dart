@@ -2,6 +2,7 @@ import 'package:copycat_base/common/paginated_results.dart';
 import 'package:copycat_base/db/clip_collection/clipcollection.dart';
 import 'package:copycat_base/domain/sources/clip_collection.dart';
 import 'package:copycat_base/utils/utility.dart';
+import 'package:copycat_pro/constants/strings.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -9,7 +10,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 @LazySingleton(as: ClipCollectionSource)
 class RemoteClipCollectionSource implements ClipCollectionSource {
   final SupabaseClient client;
-  final String table = "clip_collections";
 
   RemoteClipCollectionSource(this.client);
 
@@ -19,7 +19,8 @@ class RemoteClipCollectionSource implements ClipCollectionSource {
   @override
   Future<ClipCollection> create(ClipCollection collection) async {
     if (auth.currentUser == null) return collection;
-    final result = await db.from(table).insert(collection.toJson()).select();
+    final result =
+        await db.from(clipCollectionTable).insert(collection.toJson()).select();
 
     return collection.copyWith(
       serverId: result.first["id"],
@@ -35,7 +36,7 @@ class RemoteClipCollectionSource implements ClipCollectionSource {
 
     collection = collection.copyWith(deletedAt: now(), modified: now());
     await db
-        .from(table)
+        .from(clipCollectionTable)
         .update(collection.toJson())
         .eq("id", collection.serverId!);
     return true;
@@ -55,7 +56,7 @@ class RemoteClipCollectionSource implements ClipCollectionSource {
     String? search,
   }) async {
     final items = await db
-        .from(table)
+        .from(clipCollectionTable)
         .select()
         .order("modified")
         .range(offset, limit + offset);
@@ -71,7 +72,10 @@ class RemoteClipCollectionSource implements ClipCollectionSource {
       return collection;
     }
     final payload = collection.toJson();
-    await db.from(table).update(payload).eq("id", collection.serverId!);
+    await db
+        .from(clipCollectionTable)
+        .update(payload)
+        .eq("id", collection.serverId!);
     final updatedCollection = collection.copyWith(
       lastSynced: now(),
     )..applyId(collection);
@@ -81,8 +85,14 @@ class RemoteClipCollectionSource implements ClipCollectionSource {
   @override
   Future<ClipCollection?> get({int? id, int? serverId}) async {
     if (serverId == null) return null;
-    final result = await db.from(table).select().eq("id", serverId);
+    final result =
+        await db.from(clipCollectionTable).select().eq("id", serverId);
     if (result.isEmpty) return null;
     return ClipCollection.fromJson(result[0]);
+  }
+
+  @override
+  Future<ClipCollection> updateOrCreate(ClipCollection collection) {
+    throw UnimplementedError();
   }
 }

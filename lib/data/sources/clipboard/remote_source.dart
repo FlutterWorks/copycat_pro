@@ -4,6 +4,7 @@ import 'package:copycat_base/domain/sources/clipboard.dart';
 import 'package:copycat_base/enums/clip_type.dart';
 import 'package:copycat_base/enums/sort.dart';
 import 'package:copycat_base/utils/utility.dart';
+import 'package:copycat_pro/constants/strings.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -11,7 +12,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 @LazySingleton(as: ClipboardSource)
 class RemoteClipboardSource implements ClipboardSource {
   final SupabaseClient client;
-  final String table = "clipboard_items";
 
   RemoteClipboardSource(this.client);
 
@@ -19,7 +19,7 @@ class RemoteClipboardSource implements ClipboardSource {
 
   @override
   Future<ClipboardItem> create(ClipboardItem item) async {
-    final docs = await db.from(table).insert(item.toJson()).select();
+    final docs = await db.from(clipItemTable).insert(item.toJson()).select();
     final createdItem = item.copyWith(
       serverId: docs.first["id"],
       lastSynced: now(),
@@ -44,7 +44,7 @@ class RemoteClipboardSource implements ClipboardSource {
     DateTime? to, // no-op
   }) async {
     final items = await db
-        .from(table)
+        .from(clipItemTable)
         .select()
         .order("modified")
         .range(offset, limit + offset);
@@ -60,7 +60,7 @@ class RemoteClipboardSource implements ClipboardSource {
       return await create(item);
     }
 
-    await db.from(table).update(item.toJson()).eq("id", item.serverId!);
+    await db.from(clipItemTable).update(item.toJson()).eq("id", item.serverId!);
     return item;
   }
 
@@ -71,7 +71,7 @@ class RemoteClipboardSource implements ClipboardSource {
     }
 
     item = item.copyWith(deletedAt: now(), modified: now(), text: "", url: "");
-    await db.from(table).update(item.toJson()).eq("id", item.serverId!);
+    await db.from(clipItemTable).update(item.toJson()).eq("id", item.serverId!);
     return true;
   }
 
@@ -81,9 +81,10 @@ class RemoteClipboardSource implements ClipboardSource {
   }
 
   @override
-  Future<ClipboardItem?> get({int? id, String? serverId}) async {
-    if (serverId == null) return null;
-    final item = await db.from(table).select().eq("id", serverId);
+  Future<ClipboardItem?> get({int? id, int? serverId}) async {
+    if (serverId == null && id == null) return null;
+    final item =
+        await db.from(clipItemTable).select().eq("id", (serverId ?? id)!);
     if (item.isEmpty) return null;
     final clipItem = ClipboardItem.fromJson(item.first);
     return clipItem;
@@ -117,7 +118,12 @@ class RemoteClipboardSource implements ClipboardSource {
         };
       },
     ).toList();
-    await db.from(table).upsert(items_);
+    await db.from(clipItemTable).upsert(items_);
     return true;
+  }
+
+  @override
+  Future<ClipboardItem> updateOrCreate(ClipboardItem item) {
+    throw UnimplementedError();
   }
 }

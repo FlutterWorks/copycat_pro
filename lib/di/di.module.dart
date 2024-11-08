@@ -9,6 +9,7 @@ import 'dart:async' as _i687;
 import 'package:copycat_base/domain/repositories/auth.dart' as _i281;
 import 'package:copycat_base/domain/repositories/drive_credential.dart'
     as _i447;
+import 'package:copycat_base/domain/services/cross_sync_listener.dart' as _i159;
 import 'package:copycat_base/domain/sources/clip_collection.dart' as _i569;
 import 'package:copycat_base/domain/sources/clipboard.dart' as _i191;
 import 'package:copycat_base/domain/sources/subscription.dart' as _i860;
@@ -18,6 +19,7 @@ import 'package:copycat_pro/bloc/monetization_cubit/monetization_cubit.dart'
 import 'package:copycat_pro/data/repositories/auth.dart' as _i789;
 import 'package:copycat_pro/data/repositories/drive_credential.dart' as _i729;
 import 'package:copycat_pro/data/repositories/subscription.dart' as _i140;
+import 'package:copycat_pro/data/services/cross_sync_listener.dart' as _i702;
 import 'package:copycat_pro/data/sources/clip_collection/remote_source.dart'
     as _i342;
 import 'package:copycat_pro/data/sources/clipboard/remote_source.dart' as _i533;
@@ -52,6 +54,11 @@ class CopycatProPackageModule extends _i526.MicroPackageModule {
     );
     gh.lazySingleton<_i281.AuthRepository>(
         () => _i789.AuthRepositoryImpl(client: gh<_i454.SupabaseClient>()));
+    gh.lazySingleton<_i159.ClipCrossSyncListener>(
+        () => _i702.SBClipCrossSyncListener(
+              gh<_i454.SupabaseClient>(),
+              gh<String>(instanceName: 'device_id'),
+            ));
     gh.lazySingleton<_i903.SyncClipboardSource>(
       () => _i558.SyncClipboardSourceImpl(gh<_i454.SupabaseClient>()),
       instanceName: 'remote',
