@@ -19,17 +19,13 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
 
   @override
   Future<PaginatedResult<ClipboardItem>> getLatestClipboardItems({
-    required String userId,
     int limit = 100,
     int offset = 0,
     String? excludeDeviceId,
     DateTime? lastSynced,
   }) async {
-    var query = db
-        .from(clipboardItemsTable)
-        .select()
-        .eq("userId", userId)
-        .isFilter("deletedAt", null);
+    var query =
+        db.from(clipboardItemsTable).select().isFilter("deletedAt", null);
 
     if (lastSynced != null) {
       final isoDate = lastSynced
@@ -55,17 +51,13 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
 
   @override
   Future<PaginatedResult<ClipCollection>> getLatestClipCollections({
-    required String userId,
     int limit = 100,
     int offset = 0,
     String? excludeDeviceId,
     DateTime? lastSynced,
   }) async {
-    var query = db
-        .from(clipCollectionsTable)
-        .select()
-        .eq("userId", userId)
-        .isFilter("deletedAt", null);
+    var query =
+        db.from(clipCollectionsTable).select().isFilter("deletedAt", null);
 
     if (lastSynced != null) {
       final isoDate = lastSynced
@@ -93,7 +85,6 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
 
   @override
   Future<PaginatedResult<ClipboardItem>> getDeletedClipboardItems({
-    required String userId,
     int limit = 100,
     int offset = 0,
     String? excludeDeviceId,
@@ -104,11 +95,7 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
         .subtract(const Duration(seconds: 5))
         .toUtc()
         .toIso8601String();
-    var query = db
-        .from(clipboardItemsTable)
-        .select()
-        .eq("userId", userId)
-        .gte("deletedAt", isoDate);
+    var query = db.from(clipboardItemsTable).select().gte("deletedAt", isoDate);
 
     if (excludeDeviceId != null && excludeDeviceId != "") {
       query = query.neq("deviceId", excludeDeviceId);
@@ -123,7 +110,6 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
 
   @override
   Future<PaginatedResult<ClipCollection>> getDeletedClipCollections({
-    required String userId,
     int limit = 100,
     int offset = 0,
     String? excludeDeviceId,
@@ -135,11 +121,8 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
         .subtract(const Duration(seconds: 5))
         .toUtc()
         .toIso8601String();
-    var query = db
-        .from(clipCollectionsTable)
-        .select()
-        .eq("userId", userId)
-        .gte("deletedAt", isoDate);
+    var query =
+        db.from(clipCollectionsTable).select().gte("deletedAt", isoDate);
 
     if (excludeDeviceId != null && excludeDeviceId != "") {
       query = query.neq("deviceId", excludeDeviceId);

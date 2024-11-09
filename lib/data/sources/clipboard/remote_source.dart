@@ -91,7 +91,7 @@ class RemoteClipboardSource implements ClipboardSource {
   }
 
   @override
-  Future<ClipboardItem?> getLatest() {
+  Future<ClipboardItem?> getLatest({bool? synced}) {
     throw UnimplementedError();
   }
 
@@ -101,7 +101,7 @@ class RemoteClipboardSource implements ClipboardSource {
   }
 
   @override
-  Future<bool> deleteMany(List<ClipboardItem> items) async {
+  Future<List<ClipboardItem>> deleteMany(List<ClipboardItem> items) async {
     final items_ = items.where((item) => item.serverId != null).map(
       (item) {
         final json = item
@@ -119,7 +119,7 @@ class RemoteClipboardSource implements ClipboardSource {
       },
     ).toList();
     await db.from(clipItemTable).upsert(items_);
-    return true;
+    return items;
   }
 
   @override
