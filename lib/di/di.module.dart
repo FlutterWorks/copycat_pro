@@ -71,6 +71,11 @@ class CopycatProPackageModule extends _i526.MicroPackageModule {
       () => _i696.RemoteSubscriptionSource(client: gh<_i454.SupabaseClient>()),
       instanceName: 'remote',
     );
+    gh.lazySingleton<_i159.CollectionCrossSyncListener>(
+        () => _i702.SBCollectionCrossSyncListener(
+              gh<_i454.SupabaseClient>(),
+              gh<String>(instanceName: 'device_id'),
+            ));
     gh.lazySingleton<_i569.ClipCollectionSource>(
       () => _i342.RemoteClipCollectionSource(gh<_i454.SupabaseClient>()),
       instanceName: 'remote',
