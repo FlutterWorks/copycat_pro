@@ -95,4 +95,19 @@ class RemoteClipCollectionSource implements ClipCollectionSource {
   Future<ClipCollection> updateOrCreate(ClipCollection collection) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<ClipCollection?> getLatest({bool? synced}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ClipCollection>> deleteMany(List<ClipCollection> items) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ClipCollection>> updateMany(List<ClipCollection> collections) {
+    throw UnimplementedError();
+  }
 }
