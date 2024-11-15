@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:copycat_base/common/failure.dart';
 import 'package:copycat_base/common/logging.dart';
 import 'package:copycat_base/db/subscription/subscription.dart';
-import 'package:copycat_pro/data/services/monitization_service.dart';
+import 'package:copycat_pro/data/services/monetization_service.dart';
 import 'package:copycat_pro/domain/repositories/subscription.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
