@@ -32,6 +32,9 @@ class MonetizationCubit extends Cubit<MonetizationState>
     emit(MonetizationState.active(subscription: subscription));
   }
 
+  Subscription? get active =>
+      state.whenOrNull(active: (subscription) => subscription);
+
   Future<Failure?> applyPromoCode(String code) async {
     final result = await repo.applyPromoCoupon(code);
     return result.fold((l) => l, (subscription) {
