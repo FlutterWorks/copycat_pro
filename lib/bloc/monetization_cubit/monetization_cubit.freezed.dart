@@ -72,6 +72,9 @@ class _$MonetizationStateCopyWithImpl<$Res, $Val extends MonetizationState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of MonetizationState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -88,6 +91,9 @@ class __$$MonetizationUnknownImplCopyWithImpl<$Res>
   __$$MonetizationUnknownImplCopyWithImpl(_$MonetizationUnknownImpl _value,
       $Res Function(_$MonetizationUnknownImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of MonetizationState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -196,6 +202,8 @@ class __$$MonetizationActiveImplCopyWithImpl<$Res>
       $Res Function(_$MonetizationActiveImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of MonetizationState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -209,6 +217,8 @@ class __$$MonetizationActiveImplCopyWithImpl<$Res>
     ));
   }
 
+  /// Create a copy of MonetizationState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $SubscriptionCopyWith<$Res> get subscription {
@@ -243,7 +253,9 @@ class _$MonetizationActiveImpl implements MonetizationActive {
   @override
   int get hashCode => Object.hash(runtimeType, subscription);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonetizationState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MonetizationActiveImplCopyWith<_$MonetizationActiveImpl> get copyWith =>
@@ -318,7 +330,10 @@ abstract class MonetizationActive implements MonetizationState {
       _$MonetizationActiveImpl;
 
   Subscription get subscription;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MonetizationState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MonetizationActiveImplCopyWith<_$MonetizationActiveImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

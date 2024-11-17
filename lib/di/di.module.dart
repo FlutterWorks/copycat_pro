@@ -38,6 +38,10 @@ class CopycatProPackageModule extends _i526.MicroPackageModule {
   _i687.FutureOr<void> init(_i526.GetItHelper gh) async {
     final registerModule = _$RegisterModule();
     gh.factory<String>(
+      () => registerModule.supabaseProjectKey,
+      instanceName: 'supabase_project_key',
+    );
+    gh.factory<String>(
       () => registerModule.supabaseUrl,
       instanceName: 'supabase_url',
     );

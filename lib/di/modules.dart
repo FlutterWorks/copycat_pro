@@ -12,6 +12,9 @@ abstract class RegisterModule {
   @Named("supabase_key")
   String get supabaseKey => const String.fromEnvironment("SUPABASE_KEY");
 
+  @Named("supabase_project_key")
+  String get supabaseProjectKey => const String.fromEnvironment("PROJECT_KEY");
+
   @preResolve
   @singleton
   Future<SupabaseClient> client(@Named("supabase_url") String url,
