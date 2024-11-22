@@ -2,6 +2,7 @@ import 'package:copycat_base/common/logging.dart';
 import 'package:copycat_base/db/subscription/subscription.dart';
 import 'package:copycat_pro/utils/extensions.dart';
 import 'package:copycat_pro/utils/utility.dart';
+import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:universal_io/io.dart';
 
@@ -28,7 +29,7 @@ mixin MonetizationService {
   }
 
   Future<void> setupRevenuCat(String userId) async {
-    await Purchases.setLogLevel(LogLevel.debug);
+    await Purchases.setLogLevel(kDebugMode ? LogLevel.debug : LogLevel.info);
 
     PurchasesConfiguration? configuration;
     if (Platform.isAndroid) {
