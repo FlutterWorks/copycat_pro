@@ -78,7 +78,7 @@ class _ClipDropRegionState extends State<ClipDropRegion> {
   bool dropZoneActive = false;
   bool processing = false;
   bool _dragStarted = false;
-  late final OfflinePersistanceCubit cubit;
+  late final OfflinePersistenceCubit cubit;
 
   void didDragStart(DropSession session) {
     if (widget.onDragStart == null || _dragStarted) return;
@@ -98,7 +98,7 @@ class _ClipDropRegionState extends State<ClipDropRegion> {
   @override
   void initState() {
     super.initState();
-    cubit = context.read<OfflinePersistanceCubit>();
+    cubit = context.read<OfflinePersistenceCubit>();
   }
 
   bool dropAllowed(DropItem item) {
