@@ -1,4 +1,5 @@
 import 'package:copycat_base/common/paginated_results.dart';
+import 'package:copycat_base/constants/strings/strings.dart';
 import 'package:copycat_base/db/clipboard_item/clipboard_item.dart';
 import 'package:copycat_base/domain/sources/clipboard.dart';
 import 'package:copycat_base/enums/clip_type.dart';
@@ -66,7 +67,7 @@ class RemoteClipboardSource implements ClipboardSource {
 
   @override
   Future<bool> delete(ClipboardItem item) async {
-    if (item.serverId == null) {
+    if (item.serverId == null || item.userId == kLocalUserId) {
       return true;
     }
 
@@ -91,7 +92,7 @@ class RemoteClipboardSource implements ClipboardSource {
   }
 
   @override
-  Future<ClipboardItem?> getLatest({bool? synced}) {
+  Future<ClipboardItem?> getLatestFromOthers({bool? synced}) {
     throw UnimplementedError();
   }
 
@@ -102,7 +103,9 @@ class RemoteClipboardSource implements ClipboardSource {
 
   @override
   Future<List<ClipboardItem>> deleteMany(List<ClipboardItem> items) async {
-    final items_ = items.where((item) => item.serverId != null).map(
+    final items_ = items
+        .where((item) => item.serverId != null && item.userId != kLocalUserId)
+        .map(
       (item) {
         final json = item
             .copyWith(

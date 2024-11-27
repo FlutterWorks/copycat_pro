@@ -1,4 +1,5 @@
 import 'package:copycat_base/common/paginated_results.dart';
+import 'package:copycat_base/constants/strings/strings.dart';
 import 'package:copycat_base/db/clip_collection/clipcollection.dart';
 import 'package:copycat_base/domain/sources/clip_collection.dart';
 import 'package:copycat_base/utils/utility.dart';
@@ -30,8 +31,8 @@ class RemoteClipCollectionSource implements ClipCollectionSource {
 
   @override
   Future<bool> delete(ClipCollection collection) async {
-    if (collection.serverId == null) {
-      return false;
+    if (collection.serverId == null || collection.userId == kLocalUserId) {
+      return true;
     }
 
     collection = collection.copyWith(deletedAt: now(), modified: now());
@@ -68,7 +69,7 @@ class RemoteClipCollectionSource implements ClipCollectionSource {
 
   @override
   Future<ClipCollection> update(ClipCollection collection) async {
-    if (collection.serverId == null) {
+    if (collection.serverId == null || collection.userId == kLocalUserId) {
       return collection;
     }
     final payload = collection.toJson();
@@ -97,7 +98,7 @@ class RemoteClipCollectionSource implements ClipCollectionSource {
   }
 
   @override
-  Future<ClipCollection?> getLatest({bool? synced}) {
+  Future<ClipCollection?> getLatestFromOthers({bool? synced}) {
     throw UnimplementedError();
   }
 
