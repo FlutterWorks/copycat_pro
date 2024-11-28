@@ -23,10 +23,14 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
     int offset = 0,
     String? excludeDeviceId,
     DateTime? lastSynced,
+    bool havingCollection = false,
   }) async {
     var query =
         db.from(clipboardItemsTable).select().isFilter("deletedAt", null);
 
+    if (havingCollection) {
+      query = query.not("collectionId", "is", "null");
+    }
     if (lastSynced != null) {
       final isoDate = lastSynced
           .subtract(const Duration(seconds: 5))
