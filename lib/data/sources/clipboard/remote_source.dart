@@ -129,4 +129,15 @@ class RemoteClipboardSource implements ClipboardSource {
   Future<ClipboardItem> updateOrCreate(ClipboardItem item) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> deleteAllEncrypted() async {
+    await db.from(clipItemTable).delete().eq("encrypted", true);
+  }
+
+  @override
+  Future<int> getClipCounts() async {
+    final result = await db.from(clipItemTable).count(CountOption.estimated);
+    return result;
+  }
 }

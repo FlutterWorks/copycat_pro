@@ -111,4 +111,11 @@ class RemoteClipCollectionSource implements ClipCollectionSource {
   Future<List<ClipCollection>> updateMany(List<ClipCollection> collections) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<int> getCount() async {
+    final count =
+        await db.from(clipCollectionTable).count(CountOption.estimated);
+    return count;
+  }
 }
