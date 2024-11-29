@@ -114,8 +114,10 @@ class RemoteClipCollectionSource implements ClipCollectionSource {
 
   @override
   Future<int> getCount() async {
-    final count =
-        await db.from(clipCollectionTable).count(CountOption.estimated);
+    final count = await db
+        .from(clipCollectionTable)
+        .count(CountOption.exact)
+        .isFilter("deletedAt", null);
     return count;
   }
 }

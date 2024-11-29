@@ -30,12 +30,11 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
 
     if (havingCollection) {
       query = query.not("collectionId", "is", "null");
+    } else {
+      query = query.isFilter("collectionId", null);
     }
     if (lastSynced != null) {
-      final isoDate = lastSynced
-          .subtract(const Duration(seconds: 5))
-          .toUtc()
-          .toIso8601String();
+      final isoDate = lastSynced.toUtc().toIso8601String();
       query = query.gt("modified", isoDate);
     }
 
@@ -49,7 +48,7 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
         .map((e) => e.decrypt())).toList());
     return PaginatedResult(
       results: clips,
-      hasMore: clips.length == limit,
+      hasMore: clips.length >= limit,
     );
   }
 
@@ -77,13 +76,13 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
       query = query.neq("deviceId", excludeDeviceId);
     }
     final docs = await query.order("modified").range(offset, offset + limit);
-    final items = docs
+    final collections = docs
         .map((e) => ClipCollection.fromJson(e))
         .map((e) => e.copyWith(lastSynced: now()))
         .toList();
     return PaginatedResult(
-      results: items,
-      hasMore: items.length == limit,
+      results: collections,
+      hasMore: collections.length >= limit,
     );
   }
 
@@ -105,10 +104,10 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
       query = query.neq("deviceId", excludeDeviceId);
     }
     final docs = await query.order("modified").range(offset, offset + limit);
-    final items = docs.map((e) => ClipboardItem.fromJson(e)).toList();
+    final deletedClips = docs.map((e) => ClipboardItem.fromJson(e)).toList();
     return PaginatedResult(
-      results: items,
-      hasMore: items.length == limit,
+      results: deletedClips,
+      hasMore: deletedClips.length >= limit,
     );
   }
 
@@ -132,10 +131,11 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
       query = query.neq("deviceId", excludeDeviceId);
     }
     final docs = await query.order("modified").range(offset, offset + limit);
-    final items = docs.map((e) => ClipCollection.fromJson(e)).toList();
+    final deletedCollections =
+        docs.map((e) => ClipCollection.fromJson(e)).toList();
     return PaginatedResult(
-      results: items,
-      hasMore: items.length == limit,
+      results: deletedCollections,
+      hasMore: deletedCollections.length >= limit,
     );
   }
 }

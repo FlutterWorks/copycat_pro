@@ -136,8 +136,19 @@ class RemoteClipboardSource implements ClipboardSource {
   }
 
   @override
-  Future<int> getClipCounts() async {
-    final result = await db.from(clipItemTable).count(CountOption.estimated);
-    return result;
+  Future<int> getClipCounts([DateTime? fromTs]) async {
+    if (fromTs != null) {
+      final count = await db
+          .from(clipItemTable)
+          .count(CountOption.exact)
+          .gt("modified", fromTs)
+          .isFilter("deletedAt", null);
+      return count;
+    }
+    final count = await db
+        .from(clipItemTable)
+        .count(CountOption.exact)
+        .isFilter("deletedAt", null);
+    return count;
   }
 }
