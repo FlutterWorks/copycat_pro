@@ -43,6 +43,7 @@ class RemoteClipboardSource implements ClipboardSource {
     SortOrder order = SortOrder.desc, // no-op
     DateTime? from, // no-op
     DateTime? to, // no-op
+    bool? encrypted, // no-op
   }) async {
     final items = await db
         .from(clipItemTable)
@@ -97,7 +98,7 @@ class RemoteClipboardSource implements ClipboardSource {
   }
 
   @override
-  Future<void> decryptPending() {
+  Future<int> fetchEncryptedCount() {
     throw UnimplementedError();
   }
 
@@ -150,5 +151,16 @@ class RemoteClipboardSource implements ClipboardSource {
         .count(CountOption.exact)
         .isFilter("deletedAt", null);
     return count;
+  }
+
+  @override
+  Future<List<ClipboardItem>> updateAll(List<ClipboardItem> items) async {
+    //? only support updating collection id in bulk.
+    final updates = items.map((item) => {
+          "id": item.serverId,
+          "collectionId": item.serverCollectionId,
+        });
+    await db.from(clipItemTable).upsert(updates);
+    return items;
   }
 }

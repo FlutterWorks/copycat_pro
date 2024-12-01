@@ -10,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 @LazySingleton(as: SyncClipboardSource)
 class SyncClipboardSourceImpl implements SyncClipboardSource {
   final SupabaseClient client;
+
   final String clipboardItemsTable = "clipboard_items";
   final String clipCollectionsTable = "clip_collections";
 
@@ -22,6 +23,7 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
     int limit = 100,
     int offset = 0,
     String? excludeDeviceId,
+    DateTime? from,
     DateTime? lastSynced,
     bool havingCollection = false,
   }) async {
@@ -32,6 +34,10 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
       query = query.not("collectionId", "is", "null");
     } else {
       query = query.isFilter("collectionId", null);
+    }
+    if (from != null) {
+      final isoDate = from.toUtc().toIso8601String();
+      query = query.lt("modified", isoDate);
     }
     if (lastSynced != null) {
       final isoDate = lastSynced.toUtc().toIso8601String();
