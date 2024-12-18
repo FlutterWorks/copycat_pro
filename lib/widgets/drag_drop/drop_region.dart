@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:copycat_base/bloc/app_config_cubit/app_config_cubit.dart';
 import 'package:copycat_base/bloc/offline_persistance_cubit/offline_persistance_cubit.dart';
 import 'package:copycat_base/common/logging.dart';
-import 'package:copycat_base/data/services/clipboard_service.dart';
+import 'package:copycat_base/constants/misc.dart';
 import 'package:copycat_base/l10n/l10n.dart';
 import 'package:copycat_base/utils/snackbar.dart';
 import 'package:copycat_pro/constants/number/values.dart';
@@ -155,7 +155,6 @@ class _ClipDropRegionState extends State<ClipDropRegion> {
       if (!isDropAllowed) return;
 
       final res = <(DataReader, DataFormat)>[];
-      int selectedPref = -1;
       int pastedCount = 0;
 
       for (final item in items) {
@@ -165,9 +164,8 @@ class _ClipDropRegionState extends State<ClipDropRegion> {
         DataFormat? selectedFormat;
         final itemFormats = reader.getFormats(allSupportedClipFormats);
 
-        (selectedFormat, selectedPref) = cubit.clipboard.filterOutByPriority(
+        selectedFormat = cubit.clipboard.filterOutByPriority(
           itemFormats,
-          prefScore: selectedPref,
         );
         if (selectedFormat == null) continue;
         res.add((reader, selectedFormat));

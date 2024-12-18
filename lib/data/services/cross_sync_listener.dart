@@ -92,7 +92,8 @@ class SBClipCrossSyncListener
   @override
   Future<void> stop() async {
     if (!isInitiated) return;
-    if (await _channel?.unsubscribe() == "ok") {
+    final result = await _channel?.unsubscribe();
+    if (result == "ok") {
       _channel = null;
       _statusEvents.add((CrossSyncListenerStatus.disconnected, null));
     }

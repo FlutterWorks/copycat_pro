@@ -32,8 +32,6 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
 
     if (havingCollection) {
       query = query.not("collectionId", "is", "null");
-    } else {
-      query = query.isFilter("collectionId", null);
     }
     if (from != null) {
       final isoDate = from.toUtc().toIso8601String();
