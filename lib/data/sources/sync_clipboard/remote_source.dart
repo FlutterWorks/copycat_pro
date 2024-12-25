@@ -1,3 +1,4 @@
+import 'package:copycat_base/common/logging.dart';
 import 'package:copycat_base/common/paginated_results.dart';
 import 'package:copycat_base/db/clip_collection/clipcollection.dart';
 import 'package:copycat_base/db/clipboard_item/clipboard_item.dart';
@@ -47,9 +48,15 @@ class SyncClipboardSourceImpl implements SyncClipboardSource {
     }
 
     final docs = await query.order("modified").range(offset, offset + limit);
-    final clips = await Future.wait((docs
-        .map((e) => ClipboardItem.fromJson(e))
-        .map((e) => e.decrypt())).toList());
+    final clips = await Future.wait(
+        (docs.map((e) => ClipboardItem.fromJson(e)).map((e) async {
+      try {
+        return await e.decrypt();
+      } catch (e_) {
+        logger.e(e_);
+        return e;
+      }
+    })).toList());
     return PaginatedResult(
       results: clips,
       hasMore: clips.length >= limit,
