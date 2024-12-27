@@ -21,10 +21,8 @@ dependencies:
   purchases_flutter: ^6.30.2
   purchases_ui_flutter: ^6.30.2
   retry: ^3.1.2
-  supabase_flutter: ^2.5.8
-  supabase_auth_ui:
-    git:
-      url: https://github.com/raj457036/flutter-auth-ui.git
+  supabase_flutter: ^2.8.2
+  supabase_auth_ui: ^0.5.4
   googleapis: ^13.1.0
   dartz: ^0.10.1
   url_launcher: ^6.3.0

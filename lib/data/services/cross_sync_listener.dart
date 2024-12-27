@@ -8,6 +8,8 @@ import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 mixin SBCrossSyncListenerStatusChangeMixin {
+  CrossSyncListenerStatus _lastStatus = CrossSyncListenerStatus.unknown;
+
   final _statusEvents = StreamController<CrossSyncStatusEvent>();
   final _channelEvents =
       StreamController<CrossSyncEvent<Map<String, dynamic>>>();
@@ -15,12 +17,13 @@ mixin SBCrossSyncListenerStatusChangeMixin {
   void _onStatusChange(RealtimeSubscribeStatus status, Object? obj) {
     switch (status) {
       case RealtimeSubscribeStatus.subscribed:
+        _lastStatus = CrossSyncListenerStatus.connected;
         _statusEvents.add((CrossSyncListenerStatus.connected, obj));
       case RealtimeSubscribeStatus.channelError:
+        _lastStatus = CrossSyncListenerStatus.error;
         _statusEvents.add((CrossSyncListenerStatus.error, obj));
-      case RealtimeSubscribeStatus.closed:
-        _statusEvents.add((CrossSyncListenerStatus.disconnected, obj));
-      case RealtimeSubscribeStatus.timedOut:
+      case RealtimeSubscribeStatus.closed || RealtimeSubscribeStatus.timedOut:
+        _lastStatus = CrossSyncListenerStatus.disconnected;
         _statusEvents.add((CrossSyncListenerStatus.disconnected, obj));
     }
   }
@@ -87,7 +90,15 @@ class SBClipCrossSyncListener
   get onStatusChange => _statusEvents.stream;
 
   @override
-  Future<void> send(ClipboardItem item) async {}
+  Future<void> reconnect() async {
+    // Reconnect only if not connected
+    if (!isInitiated || _lastStatus == CrossSyncListenerStatus.connected) {
+      return;
+    }
+    await stop();
+    await Future.delayed(const Duration(seconds: 1));
+    await start();
+  }
 
   @override
   Future<void> stop() async {
@@ -154,7 +165,15 @@ class SBCollectionCrossSyncListener
   get onStatusChange => _statusEvents.stream;
 
   @override
-  Future<void> send(ClipCollection item) async {}
+  Future<void> reconnect() async {
+    // Reconnect only if not connected
+    if (!isInitiated || _lastStatus == CrossSyncListenerStatus.connected) {
+      return;
+    }
+    await stop();
+    await Future.delayed(const Duration(seconds: 1));
+    await start();
+  }
 
   @override
   Future<void> stop() async {
