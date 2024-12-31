@@ -15,7 +15,7 @@ class DropArea extends StatelessWidget {
     final textTheme = context.textTheme;
     final colors = context.colors;
     return ColoredBox(
-      color: colors.secondaryContainer.withOpacity(0.85),
+      color: colors.secondaryContainer.withAlpha(217),
       child: processing
           ? const CircularProgressIndicator()
           : Padding(

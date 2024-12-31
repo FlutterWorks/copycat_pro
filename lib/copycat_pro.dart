@@ -1,1 +1,1 @@
-library copycat_pro;
+library;
