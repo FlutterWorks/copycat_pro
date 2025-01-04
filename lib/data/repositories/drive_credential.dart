@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:copycat_base/common/failure.dart';
+import 'package:copycat_base/constants/strings/strings.dart';
 import 'package:copycat_base/domain/model/drive_access_token/drive_access_token.dart';
 import 'package:copycat_base/domain/repositories/drive_credential.dart';
 import 'package:dartz/dartz.dart';
@@ -23,8 +24,7 @@ class DriveCredentialRepositoryImpl implements DriveCredentialRepository {
 
   @override
   FailureOr<void> launchConsentPage() async {
-    const String clientId =
-        "892296995692-qh4gj970dkvf4m3aur0ol0an2l70lvsj.apps.googleusercontent.com";
+    const String clientId = googleOAuthClientID;
     const String redirectUrl = 'https://connect.entilitystudio.com';
 
     final url = Uri.https('accounts.google.com', '/o/oauth2/v2/auth', {
@@ -36,10 +36,12 @@ class DriveCredentialRepositoryImpl implements DriveCredentialRepository {
       ].join(" "),
       "access_type": "offline",
       "prompt": "consent",
+      "state":
+          "v2", // this is used by the oauth flow for curating the redirect url
     });
 
     try {
-      await launchUrl(url);
+      await launchUrl(url, mode: LaunchMode.inAppBrowserView);
       return const Right(null);
     } catch (e) {
       return Left(Failure.fromException(e));

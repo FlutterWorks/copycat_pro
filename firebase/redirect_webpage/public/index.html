@@ -2,8 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="description" content="Redirecting to CopyCat Clipboard" />
+    <meta name="keywords" content="redirect, clipboard, copycat" />
+    <meta name="author" content="CopyCat Connect" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Clipboard Drive Connect</title>
+    <title>Redirecting to CopyCat Clipboard</title>
     <style>
       .center {
         text-align: center;
@@ -23,28 +26,6 @@
       <p id="msg">Please wait... while we redirect you to clipboard app.</p>
     </div>
 
-    <script>
-      const path = location.pathname;
-      let clipboardAppLink;
-
-      if (path.startsWith("/auth")) {
-        clipboardAppLink = "clipboard://auth" + location.search;
-      } else {
-        clipboardAppLink = "clipboard://drive-connect" + location.search;
-      }
-
-      if (clipboardAppLink) {
-        location.href = clipboardAppLink;
-      }
-
-      setTimeout(() => {
-        document.querySelector("#msg").innerHTML = `
-          <div>
-            <p>Done! You may now close this window.</p>
-            <p>Didn't opened the app yet? <a style="color: #7469B6" href="${clipboardAppLink}">Click here</a></p>
-          </div>
-          `;
-      }, 2000);
-    </script>
+    <script type="text/javascript" src="./load.js"></script>
   </body>
 </html>
