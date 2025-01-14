@@ -173,7 +173,11 @@ class _ClipDropRegionState extends State<ClipDropRegion> {
       }
 
       if (items.length > kMaxDropItemCount) {
-        showTextSnackbar(context.locale.maxDroppableItem(kMaxDropItemCount));
+        showTextSnackbar(
+          context.locale.dnd__ack__error_max_drop_count(
+            count: kMaxDropItemCount,
+          ),
+        );
       }
 
       final clips = await cubit.clipboard.processMultipleReaderDataFormat(

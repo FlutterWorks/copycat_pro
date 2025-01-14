@@ -32,7 +32,7 @@ class DropArea extends StatelessWidget {
                   ),
                   height16,
                   Text(
-                    context.locale.dropHere,
+                    context.locale.dnd__text__drop_here,
                     style: textTheme.titleMedium?.copyWith(
                       color: colors.onSecondaryContainer,
                     ),
