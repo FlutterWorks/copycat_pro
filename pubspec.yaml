@@ -13,8 +13,8 @@ dependencies:
     sdk: flutter
   copycat_base:
     path: ../copycat_base
-  flutter_bloc: ^8.1.6
-  bloc: ^8.1.4
+  flutter_bloc: ^9.0.0
+  bloc: ^9.0.0
   injectable: ^2.4.2
   get_it: ^7.7.0
   universal_io: ^2.2.2
