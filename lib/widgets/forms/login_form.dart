@@ -41,8 +41,8 @@ class CopyCatClipboardLoginForm extends StatelessWidget {
         su_auth.MetaDataField(
           label: localization.displayNameLabel,
           key: "display_name",
-          prefixIcon: const Icon(Icons.person_outline_rounded),
-          validator: ValidationBuilder().minLength(1).build(),
+          prefixIcon: const Icon(Icons.person_rounded),
+          validator: ValidationBuilder().minLength(2).build(),
         ),
       ],
       localization: su_auth.SupaEmailAuthLocalization(
