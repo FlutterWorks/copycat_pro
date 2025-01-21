@@ -2,7 +2,7 @@ function setError(code, desc) {
   setTimeout(() => {
     document.querySelector("#msg").innerHTML = `
     <div>
-    <p>Error Occurred</p>
+    <h4>Error Occurred</h4>
     <p>Code: ${code}</p>
     <p>${desc}</p>
     </div>
@@ -22,21 +22,21 @@ function redirect() {
     return;
   }
 
-
-  const isV2 = searchParam.get("state") === "v2"
-  const search = isV2 ? encodeURI(btoa(location.search)) : location.search
-
   const path = location.pathname
   let clipboardAppLink = null
+  let state = searchParam.get("state")
 
   if (path.startsWith("/auth")) {
     clipboardAppLink = "clipboard://auth"
   } else if (path.startsWith("/reset-password")) {
     clipboardAppLink = "clipboard://reset-password"
-  }
-  else {
+    state = "v2"
+  } else {
     clipboardAppLink = "clipboard://drive-connect"
   }
+
+  const isV2 = state === "v2"
+  const search = isV2 ? encodeURI(btoa(location.search.substring(1))) : location.search
 
   clipboardAppLink = `${clipboardAppLink}/${search}`
   location.href = clipboardAppLink
