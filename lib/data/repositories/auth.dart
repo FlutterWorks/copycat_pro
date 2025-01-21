@@ -18,20 +18,21 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   FailureOr<(String?, AuthUser?)> validateAuthCode(String code) async {
-    final exchange = await client.auth.exchangeCodeForSession(code);
+    try {
+      final exchange = await client.auth.exchangeCodeForSession(code);
 
-    switch (exchange.redirectType) {
-      case "passwordRecovery":
-        {
-          return Right((
-            "passwordRecovery",
-            exchange.session.user.toAuthUser(),
-          ));
-        }
-      case _:
-        logger.w("Exchange not supported. ${exchange.redirectType}");
+      switch (exchange.redirectType) {
+        case "passwordRecovery":
+          return Right(
+            ("passwordRecovery", exchange.session.user.toAuthUser()),
+          );
+        case _:
+          logger.w("Exchange not supported. ${exchange.redirectType}");
+      }
+      return const Right((null, null));
+    } catch (e) {
+      return Left(Failure.fromException(e));
     }
-    return const Right((null, null));
   }
 
   @override

@@ -22,6 +22,8 @@ class CopyCatClipboardLoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return su_auth.SupaEmailAuth(
+      resetPasswordRedirectTo:
+          "https://clipboard-419514.web.app/reset-password",
       onSignUpComplete: (su_auth.AuthResponse response) {
         if (response.session != null && response.user != null) {
           final user = response.user!.toAuthUser();

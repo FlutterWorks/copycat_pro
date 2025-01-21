@@ -1,14 +1,40 @@
-const path = location.pathname
-let clipboardAppLink
+function setError(code, desc) {
+  setTimeout(() => {
+    document.querySelector("#msg").innerHTML = `
+    <div>
+    <p>Error Occurred</p>
+    <p>Code: ${code}</p>
+    <p>${desc}</p>
+    </div>
+    `
+  }, 1000)
+}
 
 function redirect() {
   const searchParam = new URLSearchParams(location.search)
+
+  const isError = searchParam.get("error")
+
+  if (isError) {
+    const errorCode = searchParam.get("error_code")
+    const errorDesc = searchParam.get("error_description")
+    setError(errorCode, errorDesc)
+    return;
+  }
+
+
   const isV2 = searchParam.get("state") === "v2"
   const search = isV2 ? encodeURI(btoa(location.search)) : location.search
 
+  const path = location.pathname
+  let clipboardAppLink = null
+
   if (path.startsWith("/auth")) {
     clipboardAppLink = "clipboard://auth"
-  } else {
+  } else if (path.startsWith("/reset-password")) {
+    clipboardAppLink = "clipboard://reset-password"
+  }
+  else {
     clipboardAppLink = "clipboard://drive-connect"
   }
 
